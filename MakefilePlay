@@ -1,0 +1,36 @@
+#
+
+
+#CC =g++
+CC =arm-none-linux-gnueabi-g++
+AR =ar 
+CXXFLAGS = -g -Wall -O0 
+LIBS =  -L../lib -lasound -lpthread -ldl -lrt
+
+
+TARGS = testPlay
+
+all: $(TARGS)
+
+OBJS += \
+./AlsaPlay.o \
+./testPlay.o \
+./RecvAudioJitterBuffer.o \
+./jitter.o \
+./UtilsPoisx.o 
+
+
+$(TARGS): $(OBJS)
+	@echo 'Building target: $@'
+	@rm -f $@	
+	@$(CC) -o $(TARGS) $^ $(CXXFLAGS) $(LIBS)
+	@rm -f $(OBJS)
+jitter.o:jitter.c
+	@$(CC) -c $< $(CXXFLAGS)
+%.o : %.cpp
+	@$(CC) -c $< $(CXXFLAGS) $(LIBS)
+
+.PNONY: all clean
+
+clean:
+	-rm -rf $(TARGS) *.o
